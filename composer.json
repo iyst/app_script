@@ -1,0 +1,18 @@
+{
+    "name": "iyst/app_script",
+    "description": "app script",
+    "type": "lib",
+    "license": "s",
+    "authors": [
+        {
+            "name": "jack ma",
+            "email": "iyst@110.com"
+        }
+    ],
+    "minimum-stability": "dev",
+    "require": {
+       // "catfan/medoo": "dev-master",
+        "aliyuncs/oss-sdk-php": "dev-master",
+        "vlucas/phpdotenv": "^2.5@dev"
+    }
+}
