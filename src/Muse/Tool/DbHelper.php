@@ -11,9 +11,9 @@ class DbHelper
     public function connect(){
         if(!$this->dbConnect) {
             $this->dbConnect = mysqli_connect(
-                env('DB_HOST'),
-                env('DB_USER'),
-                env('DB_PASSWD')
+               config('db.host'),
+               config('db.user'),
+               config('db.passwd')
             );
             if(!$this->dbConnect) throw new Exception(mysqli_error());
             $this->selectDb();
@@ -41,7 +41,7 @@ class DbHelper
         return mysqli_affected_rows($this->dbConnect);
     }
     private function selectDb(){
-        mysqli_select_db($this->dbConnect,env('DB_NAME'));
+        mysqli_select_db($this->dbConnect,config('db.dbname'));
     }
     private function query($sql){
         return mysqli_query($this->dbConnect,$sql);
