@@ -46,4 +46,13 @@ class DbHelper
     private function query($sql){
         return mysqli_query($this->dbConnect,$sql);
     }
+    public function __destruct()
+    {
+        $this->close();
+        // TODO: Implement __destruct() method.
+    }
+    private function close()
+    {
+        mysqli_close($this->dbConnect);
+    }
 }
