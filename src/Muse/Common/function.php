@@ -10,8 +10,20 @@ function handleFileName($name,$isExt = true)
 {
     if ( !$name ) return null;
     $firstIndex = strpos($name , ' ');
-    $lastIndex  = $isExt ? strlen($name) : strrpos($name,'.')-2;
-    return ['sort' => (int)substr( $name ,0,$firstIndex),'name' => trim(str_replace(' ','',substr($name,$firstIndex,$lastIndex)))];
+    $fileName   = explode(' ',substr($name,0,strrpos($name,'.')));
+    $ext        = substr($name,strrpos($name,'.'),strlen($name));
+    if(count($fileName)>1 )
+    {
+        $name_str ='';
+        for($i=1;$i<=count($fileName)-1;$i++){
+            $name_str .= $fileName[$i];
+        }
+        $fileName = trim($name_str);
+    }else{
+        $fileName = trim($fileName[0]);
+    }
+    $fileName = $isExt ? $fileName.$ext : $fileName;
+    return ['sort' => substr( $name ,0,$firstIndex),'name' => $fileName];
 }
 /**
  * 获取env配置方法
@@ -31,13 +43,13 @@ function config($key)
 {
     global $conf;$key = strtoupper($key);
     if(!strstr($key,'.')) {
-        if($conf[$key]) return $conf[$key];
+        if($conf[$key]) return str_replace(' ','\ ',$conf[$key]);
         foreach ($conf as $item) {
             return !$item[$key] ? null : str_replace(' ','\ ',$item[$key]);
         }
     }
     $confParam = explode('.',$key);if(count($confParam)<=1) return null;
-    if(!$conf[$confParam[0]] || !( $val = $conf[$confParam[0]][$confParam[1]])) return null;
+    if(!$conf[$confParam[0]] || !( $val = str_replace(' ','\ ',$conf[$confParam[0]][$confParam[1]]))) return null;
     return $val;
 }
 
@@ -48,4 +60,32 @@ function config($key)
 function getCmdParams($key)
 {
     return getopt(implode(':',$key).':');
+}
+
+/**
+ * @param $file
+ * @param $data
+ */
+function write($file,$data)
+{
+    $handle = fopen($file,'a+');
+    fwrite($handle,$data);
+    fclose($handle);
+}
+
+function getExportName($dir,$name)
+{
+    $dirs = explode('/',$dir);
+    $name = substr($name,0,strpos($name,'.'));
+    if(!$name || count($dirs) == 1) return null;
+    return implode('_',$dirs).'_'.$name;
+}
+function createDir($dir)
+{
+    if(!is_dir($dir)) mkdir($dir);
+}
+
+function read($file)
+{
+    $handle = fopen($file,'r');
 }

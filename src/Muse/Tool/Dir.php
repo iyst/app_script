@@ -7,7 +7,7 @@ class Dir
     private $path;
     public function __construct($path = '')
     {
-        $this->path = !$path ? config('WORK_PATH') : $path;
+        $this->path = !$path ? env('WORK_PATH') : $path;
     }
     /**
      * 格式化源文件
@@ -22,14 +22,15 @@ class Dir
             //读取子目录
             $childDir   = $this->readFile($cPath);$child  = [];
             foreach ($childDir as $c) {
+                $child[$c] = [];
                 //读取文件
                 $file   = $this->readFile($cPath.'/'.$c,config('song_source_ext'));
                 if(!$file) continue;
                 $tmp    = [];
                 foreach ($file as  $f) {
-                    $f  = handleFileName($f);$tmp[$f['sort']]  = $f['name'];
+                    $f  = handleFileName($f,true);$tmp[$f['sort']]  = $f['name'];
                 }
-                ksort($tmp);$child[$c] = [];
+                ksort($tmp);$child[$c] = $tmp;
             }
             $format[$d] = $child;
         }

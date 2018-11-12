@@ -1,19 +1,43 @@
 <?php
 namespace Muse\Tool;
 
-class Log implements LogIntface
+class Log
 {
-
-    public static function write($name,$data)
+    /**
+     * @param $name
+     * @return string
+     */
+    private static function init($name)
     {
-
+        return LOG_PATH.DIRECTORY_SEPARATOR.$name.'.'.config('log.ext');
     }
-    public static function read($name)
+
+    /**
+     * @param $name
+     * @param $data
+     */
+    public static function writeLog($name,$data)
     {
-        // TODO: Implement read() method.
+        write(self::init($name),$data.',  :  '.date('Y-m-d H:i:s',time())."\n");
+        if($name != LOG_POINT) self::system($data);
     }
-    public static function delete($name)
+
+    /**
+     * @param $name
+     */
+    public static function delLog($name)
     {
-        // TODO: Implement delete() method.
+        $path  = self::init($name);
+        if( file_exists($path) ) unlink($path);
+    }
+    /**
+     * @param $data
+     */
+    public static function system($data)
+    {
+        $date       = date('Ymd',time());
+        $file       = LOG_PATH.DIRECTORY_SEPARATOR.LOG_SYSTEM.'_'.$date.'.'.config('log.ext');
+        $outLine    = $data.'  : '.date('Y-m-d H:i:s',time())."\n";
+        write($file,$outLine);
     }
 }

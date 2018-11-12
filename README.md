@@ -1,23 +1,33 @@
 
-> 陪练导出曲子数据脚本
+## 导出曲子数据脚本
 
 ## 功能描述
 
-* **Lightweight** - Less than 100 KB, portable with only one file
+* **错误日志记录** - 目录错误，歌曲导出错误，上传超时错误，执行异常
 
-* **Easy** - Extremely easy to learn and use, friendly construction
+* **断点续传** - 上传失败后记录上传断点，继续上传
 
-* **Powerful** - Supports various common and complex SQL queries, data mapping, and prevent SQL injection
+* **xml 文件转成 .plist**
 
-* **Compatible** - Supports all SQL databases, including MySQL, MSSQL, SQLite, MariaDB, PostgreSQL, Sybase, Oracle and more
+* **单目录上传** - 单个目录上传 ``-dir="demo/"``
 
-* **Friendly** - Works well with every PHP frameworks, like Laravel, Codeigniter, Yii, Slim, and framework which supports singleton extension or composer
+* **横屏和竖屏上传** - 区分横屏和竖屏
 
-* **Free** - Under MIT license, you can use it anywhere whatever you want
+* **安卓数据生成** - 安卓端数据生成
 
-## Requirement
 
-PHP 5.4+ and PDO extension installed
+##Compose 包
+```
+"require": {
+        "aliyuncs/oss-sdk-php": "dev-master",
+        "vlucas/phpdotenv": "^2.5@dev"
+}
+```
+
+## PHP版本要求
+
+PHP 7.0+ 
+
 
 ## Get Started
 

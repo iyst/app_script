@@ -2,4 +2,4 @@
 require_once 'src/autoload.php';
 
 $service = new Muse\Service\ProssSongService();
-$service->prossSong();
+$service->start();

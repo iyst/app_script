@@ -13,17 +13,22 @@ class DbService
 
     public function checkCategory($category)
     {
-        if( !$category ) return false;
-        $parentCate = $this->findCategory("chinese_name='".$category['p']."'",'id,chinese_name');
-        if(!$parentCate) return false;
-        $childCate  = $this->findCategory("chinese_name='".$category['c']."' and pcid = " .$parentCate['id'],'id,chinese_name,pcid');
-        if(!$childCate) return false;
-        return ['id'=>$childCate['id'],'name' => $childCate['chinese_name']];
+        if( $category['p'])
+        {
+            if($parentCate = $this->findCategory("chinese_name='".$category['p']."'",'id,chinese_name')) return $parentCate;
+        }
+        if( $category['c'] )
+        {
+            if($childCate  = $this->findCategory("chinese_name='".$category['c']."' and pcid = " .$category['pcid'],'id,chinese_name,pcid')) return $childCate;
+        }
+        return false;
     }
 
     public function findCategory($map , $field)
     {
-        return $this->db->find("select $field from cmf_song_category where $map");
+        $sql = "select $field from cmf_song_category where $map";
+      //  var_dump($sql);
+        return $this->db->find($sql);
     }
 
 
