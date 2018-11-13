@@ -5,7 +5,9 @@ use Muse\Tool\DbHelper;
 class DbService
 {
     private $db;
-
+    private $tb_category = 'cmf_song_category';
+    private $tb_song    = 'cmf_song';
+    private $tb_song_rc = 'cmf_song_rc';
     public function __construct()
     {
         $this->db = DbHelper::getInstance();
@@ -26,10 +28,40 @@ class DbService
 
     public function findCategory($map , $field)
     {
-        $sql = "select $field from cmf_song_category where $map";
-      //  var_dump($sql);
+        $sql = "select $field from ".$this->tb_category." where $map";
         return $this->db->find($sql);
     }
+
+    public function insertSong($data)
+    {
+        $sql = "insert into $this->tb_song (cid,chinese_name,cover_pic,sort,created) values(".$data['cid'].",'".$data['chinese_name']."','',".$data['sort'].",time())";
+        $this->db->query($sql);
+        return $this->db->getInserID();
+    }
+
+    /**
+     * @param $screen
+     * @param $data
+     * @return bool|\mysqli_result
+     */
+    public function insertSongRc($screen,$data)
+    {
+        $sql = $screen == S_SCREEN_V ?
+            "insert into $this->sb_song_rc (song_id,url,created) VALUES (".$data['song_id'].",'".$data['url']."',time())" :
+            "insert into cmf_song_rc (song_id,horscreen_url,h_android_url,created,url) VALUES (".$data['song_id'].",'".$data['horscreen_url']."','".$data['h_android_url']."',time(),'')";
+        return $this->db->query($sql);
+    }
+
+    public function updateSongRc($screen,$data)
+    {
+        $sql = $screen == S_SCREEN_V ?
+            "update $this->tb_song_rc set url = '".$data['url']."' where song_id=".$data['song_id'] :
+            "update $this->tb_song_rc set horscreen_url = '".$data['url']."',h_android_url='".$data['h_android_url']."' where song_id=".$data['song_id'];
+        return $this->db->query($sql);
+    }
+
+
+
 
 
 }

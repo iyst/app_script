@@ -43,8 +43,11 @@ class DbHelper
     private function selectDb(){
         mysqli_select_db($this->dbConnect,config('db.dbname'));
     }
-    private function query($sql){
+    public function query($sql){
         return mysqli_query($this->dbConnect,$sql);
+    }
+    public function getInserID(){
+        return mysqli_insert_id($this->dbConnect);
     }
     public function __destruct()
     {

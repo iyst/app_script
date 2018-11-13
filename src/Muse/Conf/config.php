@@ -35,11 +35,12 @@ return [
      * p    int  0 不开启 1 开启断点续传
      * -----------------------
      */
-
+    'OSS_DIR' => 'score_v6',
     'SCRIPT_OPTIONS' => ['d','m','e','p','s','r','u','z'],
+    'CREATE_ANDROID_DATA'=> 0,
+    'IS_CHANGE_SVG_COLOR' => 1,
     'OSS' =>[
         'ACCESS_KEY_ID' => env('OSS_ACCESS_KEY_ID'),
-
         'ACCESS_KEY_SECRET' => env('OSS_ACCESS_KEY_SECRET'),
         'ENDPOINT'  => env('OSS_ENDPOINT'),
         'BUCKET'    => env('OSS_BUCKET'),

@@ -37,7 +37,7 @@ class Log
     {
         $date       = date('Ymd',time());
         $file       = LOG_PATH.DIRECTORY_SEPARATOR.LOG_SYSTEM.'_'.$date.'.'.config('log.ext');
-        $outLine    = $data.'  : '.date('Y-m-d H:i:s',time())."\n";
+        $outLine    = $data."\n";
         write($file,$outLine);
     }
 }

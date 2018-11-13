@@ -72,20 +72,97 @@ function write($file,$data)
     fwrite($handle,$data);
     fclose($handle);
 }
-
-function getExportName($dir,$name)
+function removeFile($path)
 {
-    $dirs = explode('/',$dir);
-    $name = substr($name,0,strpos($name,'.'));
-    if(!$name || count($dirs) == 1) return null;
-    return implode('_',$dirs).'_'.$name;
+    if(file_exists($path)) unlink($path);
 }
+
+/**
+ * 返回导出文件名称
+ * @param $dir
+ * @param $sort
+ * @param $name
+ * @return array|bool
+ */
+function getExportName($dir,$sort,$name)
+{
+    //根目录
+    $rootPath   = WORK_PATH.'/';
+
+    if(!$dir || !$name) return false;
+    $dirs = explode('/',$dir);
+
+    if(count($dirs) == 1) return false;
+
+    $fileName = substr($name,0,strpos($name,'.'));
+    if( !$fileName ) return false;
+    $ext      = substr($name,strpos($name,'.'),strlen($name));
+    $ret =  [
+        'dir' => $rootPath.$dir.DIRECTORY_SEPARATOR,
+        'fullName' =>  implode('_',$dirs).'_'.$fileName,
+        'fileName' => $fileName,
+        'ext'   =>  $ext,
+        'sort'  => $sort,
+        'fileDir' => $dir,
+        ];;
+    return $ret;
+}
+
+/**
+ * 创建目录
+ * @param $dir
+ */
 function createDir($dir)
 {
     if(!is_dir($dir)) mkdir($dir);
 }
 
-function read($file)
+/**
+ * 创建一个唯一的id号
+ * @return string
+ */
+function createCode()
 {
-    $handle = fopen($file,'r');
+    return substr(md5(mt_rand(10000, 99999)),0,7).'-'.substr(md5(mt_rand(10000, 99999)),0,7).'-'.substr(md5(mt_rand(10000, 99999)),0,7);
+}
+
+/**
+ * @param $path
+ * @param $fullName
+ */
+function copyLRMid($path,$fullName)
+{
+    $left   = $path.DIRECTORY_SEPARATOR.$fullName.'_left.mid';
+    $right  = $path.DIRECTORY_SEPARATOR.$fullName.'_right.mid';
+    $mid    = $path.DIRECTORY_SEPARATOR.$fullName.'.mid';
+    if(!file_exists($left) && !file_exists($right)){
+        copy($mid,$left);
+        copy($mid,$right);
+    }
+}
+
+/**
+ * @param $rootPath
+ * @param $filePath
+ * @return array
+ */
+function compressZip($rootPath,$filePath)
+{
+    $zip        = new ZipArchive();
+    $code       = createCode();
+    $zipName    = $rootPath.DIRECTORY_SEPARATOR.$code.'.zip';
+    if ( $zip->open($zipName, ZIPARCHIVE::CREATE) )
+    {
+        $handle = opendir($filePath);
+        while (($filename = readdir($handle)) !== false)
+        {
+            if ($filename != "." && $filename != "..")
+            {
+                $zip->addFile($filePath .DIRECTORY_SEPARATOR.$filename, $filename);
+            }
+        }
+        @closedir($handle);
+    }
+    $zip->close();
+    return ['name' =>$zipName,'code'=>$code];
 }
