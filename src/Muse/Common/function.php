@@ -166,3 +166,33 @@ function compressZip($rootPath,$filePath)
     $zip->close();
     return ['name' =>$zipName,'code'=>$code];
 }
+
+function clearExt($name)
+{
+    $name = str_replace('.mscx','',$name);
+    $name = str_replace('.mscz','',$name);
+    return $name;
+}
+
+/**
+ * @param $dirName
+ * @return bool
+ */
+function removeDir($dirName)
+{
+    if(!is_dir($dirName))
+    {
+        return false;
+    }
+    $handle = @opendir($dirName);
+    while(($file = @readdir($handle)) !== false)
+    {
+        if($file != '.' && $file != '..')
+        {
+            $dir = $dirName . '/' . $file;
+            is_dir($dir) ? remove_dir($dir) : @unlink($dir);
+        }
+    }
+    closedir($handle);
+    return rmdir($dirName) ;
+}

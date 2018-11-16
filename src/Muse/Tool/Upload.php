@@ -7,11 +7,11 @@ class Upload
     public static function uploadOss($file,$object)
     {
         $oss = new OssClient(
-            config('ACCESS_KEY_ID'),
-            config('ACCESS_KEY_SECRET'),
-            config('ENDPOINT')
+            config('OSS.ACCESS_KEY_ID'),
+            config('OSS.ACCESS_KEY_SECRET'),
+            config('OSS.ENDPOINT')
         );
-        $fileData = $oss->uploadFile(config('BUCKET'),$object,$file);
+        $fileData = $oss->uploadFile(config('OSS.BUCKET'),$object,$file);
         return $fileData['info']['url'];
     }
 

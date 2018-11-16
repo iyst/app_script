@@ -27,8 +27,9 @@ class DbHelper
         return self::$instance;
     }
     public function select($sql){
+        $result = $this->query($sql);
         $list =array();
-        while ($row = mysqli_fetch_array($this->query($sql), MYSQLI_ASSOC)) {
+        while ($row = mysqli_fetch_array($result, MYSQLI_ASSOC)) {
             $list[] = $row;
         }
         return $list;

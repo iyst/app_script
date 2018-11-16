@@ -18,7 +18,7 @@ class Log
      */
     public static function writeLog($name,$data)
     {
-        write(self::init($name),$data.',  :  '.date('Y-m-d H:i:s',time())."\n");
+        write(self::init($name),$data."|\n");
         if($name != LOG_POINT) self::system($data);
     }
 

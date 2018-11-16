@@ -8,6 +8,8 @@ class DbService
     private $tb_category = 'cmf_song_category';
     private $tb_song    = 'cmf_song';
     private $tb_song_rc = 'cmf_song_rc';
+
+
     public function __construct()
     {
         $this->db = DbHelper::getInstance();
@@ -52,6 +54,11 @@ class DbService
         return $this->db->query($sql);
     }
 
+    /**
+     * @param $screen
+     * @param $data
+     * @return bool|\mysqli_result
+     */
     public function updateSongRc($screen,$data)
     {
         $sql = $screen == S_SCREEN_V ?
@@ -60,6 +67,31 @@ class DbService
         return $this->db->query($sql);
     }
 
+    /**
+     * @param $parentName
+     * @param $childName
+     * @return array|null
+     */
+    public function getCategorySongData($parentName,$childName)
+    {
+        $sql            = "select id from $this->tb_category where chinese_name='".$parentName."'";
+        if ( !($parent  = $this->db->find($sql)) ) return null;
+
+        $childSql       = "select id,pcid from $this->tb_category where chinese_name='".$childName."'";
+        if ( !($child   = $this->db->find($childSql)) ) return null;
+
+        if( $child['pcid'] != $parent['id'] ) return null;
+
+        $musicSql       = 'select id,chinese_name from cmf_song where cid='.$child['id'];
+        $music          = $this->db->select($musicSql);
+        $song           = [];
+
+        foreach ($music as $k)
+        {
+            $song[$k['chinese_name']] = $k['id'];
+        }
+        return $song;
+    }
 
 
 

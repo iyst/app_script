@@ -35,7 +35,8 @@ return [
      * p    int  0 不开启 1 开启断点续传
      * -----------------------
      */
-    'OSS_DIR' => 'score_v6',
+    //'OSS_DIR' => 'score_v6',
+    'OSS_DIR' => 'test',
     'SCRIPT_OPTIONS' => ['d','m','e','p','s','r','u','z'],
     'CREATE_ANDROID_DATA'=> 0,
     'IS_CHANGE_SVG_COLOR' => 1,
