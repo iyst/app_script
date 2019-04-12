@@ -8,7 +8,11 @@ const S_OPTION_DIR_FILE = 'r';
 const S_OPTION_POINT = 'p';
 const S_OPTION_UPLOAD = 'u';
 const S_OPTION_ZIP = 'z';
+const S_OPTION_C = 'c';
 
+//命令行参数值
+const S_C_ON = 1;
+const S_C_OFF = 0;
 //命令行参数值
 const S_POINT_ON = 1;
 const S_POINT_OFF = 0;

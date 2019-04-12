@@ -9,21 +9,32 @@
 function handleFileName($name,$isExt = true)
 {
     if ( !$name ) return null;
-    $firstIndex = strpos($name , ' ');
-    $fileName   = explode(' ',substr($name,0,strrpos($name,'.')));
-    $ext        = substr($name,strrpos($name,'.'),strlen($name));
-    if(count($fileName)>1 )
+    $explodeData    = explode(' ',substr($name,0,strrpos($name,'.')));
+    $ext            = substr($name,strrpos($name,'.'),strlen($name));
+    if(count($explodeData) >1 )
     {
-        $name_str ='';
-        for($i=1;$i<=count($fileName)-1;$i++){
-            $name_str .= $fileName[$i];
+        $firstIndex = strpos($name , ' ');
+        $fileName   = substr($name,0,strrpos($name,'.'));
+        $fileName   = substr($fileName,$firstIndex+1,strlen($fileName));
+        $sort       = substr( $name ,0,$firstIndex);
+    }
+    else
+    {
+        $fileName =  $explodeData[0];
+        $patterns = "/\d+/"; //第一种
+        preg_match_all($patterns,$fileName,$arr);
+        $max = 0;
+        foreach ($arr[0] as $item)
+        {
+            if($item > $max)
+            {
+                $max = $item;
+            }
         }
-        $fileName = trim($name_str);
-    }else{
-        $fileName = trim($fileName[0]);
+        $sort = $max;
     }
     $fileName = $isExt ? $fileName.$ext : $fileName;
-    return ['sort' => substr( $name ,0,$firstIndex),'name' => $fileName];
+    return ['sort' =>$sort ,'fileName' => ['name'=>$fileName,'sourceName'=>$name]];
 }
 /**
  * 获取env配置方法
@@ -94,9 +105,9 @@ function getExportName($dir,$sort,$name)
 
     if(count($dirs) == 1) return false;
 
-    $fileName = substr($name,0,strpos($name,'.'));
+    $fileName = substr($name,0,strrpos($name,'.'));
     if( !$fileName ) return false;
-    $ext      = substr($name,strpos($name,'.'),strlen($name));
+    $ext      = substr($name,strrpos($name,'.'),strlen($name));
     $ret =  [
         'dir' => $rootPath.$dir.DIRECTORY_SEPARATOR,
         'fullName' =>  implode('_',$dirs).'_'.$fileName,
@@ -104,7 +115,7 @@ function getExportName($dir,$sort,$name)
         'ext'   =>  $ext,
         'sort'  => $sort,
         'fileDir' => $dir,
-        ];;
+        ];
     return $ret;
 }
 

@@ -82,18 +82,59 @@ class DbService
 
         if( $child['pcid'] != $parent['id'] ) return null;
 
-        $musicSql       = 'select id,chinese_name from cmf_song where cid='.$child['id'];
+        $musicSql       = 'select id,chinese_name,sort from cmf_song where cid='.$child['id'];
         $music          = $this->db->select($musicSql);
         $song           = [];
 
         foreach ($music as $k)
         {
-            $song[$k['chinese_name']] = $k['id'];
+            if($k['sort'] ) {
+
+                if($k['sort'] < 10)
+                {
+                    $sort = '0'.$k['sort'];
+                }else{
+                    $sort = $k['sort'];
+                }
+                $chineseName = $sort.'-'.$k['chinese_name'] ;
+            }else{
+                $chineseName = $k['chinese_name'];
+            }
+            $song[$chineseName] = $k['id'];
         }
         return $song;
     }
 
+    public function deleteSongs($id)
+    {
+        $sel = "delete from cmf_song where cid=".$id;
+        return $this->db->query($sel);
+    }
 
+    public function updatePreViewUrl($songId,$url)
+    {
+        $sql = "update $this->tb_song_rc  set preview_img='".$url."' where song_id=".$songId;
+        return $this->db->query($sql);
+    }
 
+    public function getPreviewImgEmpty()
+    {
+        $songData =  $this->db->select('select t.id,t.song_id,s.cid,s.chinese_name from '.$this->tb_song_rc.' as t left join '.$this->tb_song.' as s on t.song_id = s.id where t.preview_img="" and s.cid > 0');
+
+        foreach ($songData as $k =>$item)
+        {
+            echo $item['chinese_name']."\n";
+            if(!$item['cid']) continue;
+            $c1 = "select pcid,chinese_name from cmf_song_category where id=".$item['cid'];
+
+            if($c1Data = $this->db->find($c1))
+            {
+                $c2 = 'select chinese_name from cmf_song_category where id='.$c1Data['pcid'];
+                $c2Data = $this->db->find($c2);
+            }
+            $songData[$k]['chinese_name'] = $c2Data['chinese_name'].'/'.$c1Data['chinese_name'].'/'.$item['chinese_name'];
+        }
+        return $songData;
+    }
 
 }

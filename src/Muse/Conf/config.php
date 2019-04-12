@@ -25,21 +25,24 @@ return [
 
     /**
      * ------参数配置-------
-     * d       string 要上传的目录 deme/或者 demos/demo1
+     * d    string 要上传的目录 deme/或者 demos/demo1
      * m    string 方法 add 新增 update 修改
      * e    int 1 竖屏 2 横屏
-     * s string 错误歌曲文件路径
-     * r  string 错误目录文件路径
+     * s    string 错误歌曲文件路径
+     * r    string 错误目录文件路径
      * u    int 是否上传 0 不上传 1 上传
-     * z       int  0 不压缩 1 压缩
+     * z    int  0 不压缩 1 压缩
      * p    int  0 不开启 1 开启断点续传
+     * c    int  0不处理 1 处理 是否处理成plist
      * -----------------------
      */
     //'OSS_DIR' => 'score_v6',
-    'OSS_DIR' => 'test',
-    'SCRIPT_OPTIONS' => ['d','m','e','p','s','r','u','z'],
+    'OSS_DIR' => env('OSS_DIR'),
+    'OSS_PNG_DIR' => 'png',
+    'SCRIPT_OPTIONS' => ['d','m','e','p','s','r','u','z','c'],
     'CREATE_ANDROID_DATA'=> 0,
     'IS_CHANGE_SVG_COLOR' => 1,
+    'EXPORT_EXT' => '.pdf',
     'OSS' =>[
         'ACCESS_KEY_ID' => env('OSS_ACCESS_KEY_ID'),
         'ACCESS_KEY_SECRET' => env('OSS_ACCESS_KEY_SECRET'),

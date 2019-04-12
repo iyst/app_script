@@ -4,14 +4,19 @@ use OSS\OssClient;
 
 class Upload
 {
-    public static function uploadOss($file,$object)
+    private $ossObject;
+    public function __construct()
     {
-        $oss = new OssClient(
+        $this->ossObject = new OssClient(
             config('OSS.ACCESS_KEY_ID'),
             config('OSS.ACCESS_KEY_SECRET'),
             config('OSS.ENDPOINT')
         );
-        $fileData = $oss->uploadFile(config('OSS.BUCKET'),$object,$file);
+    }
+
+    public function uploadOss($file,$object)
+    {
+        $fileData = $this->ossObject->uploadFile(config('OSS.BUCKET'),$object,$file);
         return $fileData['info']['url'];
     }
 

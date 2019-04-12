@@ -37,6 +37,35 @@ class Dir
         return $format;
     }
     /**
+     * 格式化源文件
+     * @return mixed
+     */
+    public function formatFileCopy($rootPath = '',$ext = [])
+    {
+        $dir  = $this->readFile($rootPath);
+        $ext  = (is_array($ext) && $ext) ? $ext : config('song_source_ext');
+        foreach ( $dir as $d ) {
+            $cPath      = $this->path.'/'.$d;
+            if(!is_dir( $cPath )) continue;
+            //读取子目录
+            $childDir   = $this->readFile($cPath);$child  = [];
+            foreach ($childDir as $c) {
+                $child[$c] = [];
+                //读取文件
+                $file   = $this->readFile($cPath.'/'.$c,$ext);
+                var_dump($cPath.'/'.$c);
+                if(!$file) continue;
+                $tmp    = [];
+                foreach ($file as  $k=>$f) {
+                    $tmp[$k] = $f;
+                }
+                $child[$c] = $tmp;
+            }
+            $format[$d] = $child;
+        }
+        return $format;
+    }
+    /**
      * 读取文件和目录
      * @param string $path 路径
      * @param array $filter 过滤格式

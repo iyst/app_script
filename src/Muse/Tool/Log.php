@@ -18,7 +18,7 @@ class Log
      */
     public static function writeLog($name,$data)
     {
-        write(self::init($name),$data."|\n");
+        write(self::init($name),$data."\n");
         if($name != LOG_POINT) self::system($data);
     }
 
@@ -37,7 +37,7 @@ class Log
     {
         $date       = date('Ymd',time());
         $file       = LOG_PATH.DIRECTORY_SEPARATOR.LOG_SYSTEM.'_'.$date.'.'.config('log.ext');
-        $outLine    = $data."\n";
+        $outLine    = $data.'/'.date('Y-m-d H:i:s',time())."\n";
         write($file,$outLine);
     }
 }
